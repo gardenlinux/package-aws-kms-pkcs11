@@ -1,0 +1,16 @@
+Source: aws-kms-pkcs11
+Section: unknown
+Priority: optional
+Maintainer: Garden Linux builder <contact@gardenlinux.io>
+Build-Depends: debhelper-compat (= 13), libp11-kit-dev, libp11-dev, libjson-c-dev, libcurl4-openssl-dev
+Standards-Version: 4.5.1
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Browser: https://salsa.debian.org/debian/aws-kms-pkcs11
+#Vcs-Git: https://salsa.debian.org/debian/aws-kms-pkcs11.git
+Rules-Requires-Root: no
+
+Package: aws-kms-pkcs11
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, aws-sdk-cpp, p11-kit, libp11-3, libjson-c5
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>

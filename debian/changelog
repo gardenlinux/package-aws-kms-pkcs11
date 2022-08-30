@@ -1,0 +1,5 @@
+aws-kms-pkcs11 (0.0.8-1) unstable; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Garden Linux builder <contact@gardenlinux.io>  Fri, 26 Aug 2022 08:46:19 +0000

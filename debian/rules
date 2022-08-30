@@ -1,0 +1,32 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+GNU_ARCH:=$(shell uname -m)
+PKCS11_MOD_PATH:=$(shell pkg-config --variable p11_module_path p11-kit-1 2>/dev/null)
+
+%:
+	dh $@
+
+
+override_dh_auto_build:
+	dh_auto_build -- AWS_SDK_LIB_PATH=/usr/lib/$(GNU_ARCH)-linux-gnu
+
+override_dh_auto_install:
+	mkdir -p '$(PWD)/debian/aws-kms-pkcs11/$(PKCS11_MOD_PATH)'
+	dh_auto_install -- AWS_SDK_LIB_PATH=/usr/lib/$(GNU_ARCH)-linux-gnu PKCS11_MOD_PATH='$(PWD)/debian/aws-kms-pkcs11/$(PKCS11_MOD_PATH)'
+
+# tests require aws credentials, so skip in package build and hope for the best
+override_dh_auto_test:
+	true
