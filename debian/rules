@@ -13,6 +13,7 @@
 # package maintainers to append LDFLAGS
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
+AWS_SDK_STATIC:=y
 GNU_ARCH:=$(shell uname -m)
 PKCS11_MOD_PATH:=$(shell pkg-config --variable p11_module_path p11-kit-1 2>/dev/null)
 

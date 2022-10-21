@@ -1,3 +1,9 @@
+aws-kms-pkcs11 (0.0.9-1) unstable; urgency=medium
+
+  * update package
+
+ -- Garden Linux builder <contact@gardenlinux.io>  Tue, 18 Oct 2022 08:46:19 +0000
+
 aws-kms-pkcs11 (0.0.8-1) unstable; urgency=medium
 
   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>

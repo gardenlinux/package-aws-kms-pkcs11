@@ -1,0 +1,13 @@
+Subject: Adjust path to library dependenies
+
+--- a/Makefile
++++ b/Makefile
+@@ -12,7 +12,7 @@
+ # Try to find which subdir of the SDK has the libraries
+ ifneq ($(AWS_SDK_PATH),)
+   ifneq ($(wildcard $(AWS_SDK_PATH)/lib),)
+-    AWS_SDK_LIB_PATH := $(addsuffix /lib,$(AWS_SDK_PATH))
++    AWS_SDK_LIB_PATH := $(addsuffix /lib/x86_64-linux-gnu,$(AWS_SDK_PATH))
+   else ifneq ($(wildcard $(AWS_SDK_PATH)/lib64),)
+     AWS_SDK_LIB_PATH := $(addsuffix /lib64,$(AWS_SDK_PATH))
+   else

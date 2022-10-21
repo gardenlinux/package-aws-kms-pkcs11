@@ -1,0 +1,14 @@
+Subject: Ignore .gitlab-ci.yml
+
+--- /dev/null
++++ aws-kms-pkcs11-0.0.9/.gitlab-ci.yml
+@@ -0,0 +1,9 @@
++include:
++- project: gardenlinux/gardenlinux-package-build
++  file:
++  - pipeline/pipeline.yml
++
++variables:
++  # Define the source of this package
++  SOURCE_NAME: 'aws-kms-pkcs11'
++  ORIG_TAR: 'aws-kms-pkcs11_0.0.9.orig.tar.gz'
