@@ -15,6 +15,6 @@ glrepo:
       echo -n "$BUILD_SOURCES_START_LIST" > /etc/apt/sources.list
       apt-get update -qy
       apt-get upgrade -qy -o DPkg::Options::=--force-unsafe-io fakeroot
-      apt-get install -qy --no-install-recommends wget
+      apt-get install -qy --no-install-recommends ca-certificates wget
       wget ${GRADENLINUX_REPO_KEY_SOURCE} -O /etc/apt/trusted.gpg.d/${GARDENLINUX_REPO_KEY}
     fi
