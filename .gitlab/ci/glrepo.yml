@@ -4,6 +4,7 @@ variables:
 
 glrepo:
   stage: build
+  image: ${BUILD_IMAGE}
 
   script:
   - wget -q ${GRADENLINUX_REPO_KEY_SOURCE} -O /etc/apt/trusted.gpg.d/${GARDENLINUX_REPO_KEY}
