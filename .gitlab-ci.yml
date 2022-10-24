@@ -1,12 +1,11 @@
 include:
-- local: .gitlab/ci/glrepo.yml
+- local: .gitlab/ci/build.yml
 - project: gardenlinux/gardenlinux-package-build
   file:
 #  - pipeline/pipeline.yml
   - pipeline/variables.yml
   - pipeline/workflow.yml
   - pipeline/source.yml
-  - pipeline/build.yml
   - pipeline/signed-source.yml
   - pipeline/signed-build.yml
   - pipeline/test.yml
@@ -14,7 +13,6 @@ include:
 
 stages:
 - source
-- glrepo
 - build
 - signed source
 - signed build
