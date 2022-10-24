@@ -7,3 +7,7 @@ variables:
   # Define the source of this package
   SOURCE_NAME: 'aws-kms-pkcs11'
   ORIG_TAR: 'aws-kms-pkcs11_0.0.9.orig.tar.gz'
+  BUILD_SOURCES_LIST: |
+    deb http://deb.debian.org/debian ${BUILD_DIST} main
+    deb http://deb.debian.org/debian-security ${BUILD_DIST}-security main
+    deb http://repo.gardenlinux.io/gardenlinux today main
