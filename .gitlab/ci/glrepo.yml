@@ -13,9 +13,6 @@ glrepo:
   - >
     if [[ $CI_DISPOSABLE_ENVIRONMENT ]]; then
       echo -n "$BUILD_SOURCES_START_LIST" > /etc/apt/sources.list
-      if [[ $JOB_HOST_ARCH != all ]]; then
-        dpkg --add-architecture $JOB_HOST_ARCH
-      fi
       apt-get update -qy
       apt-get upgrade -qy -o DPkg::Options::=--force-unsafe-io fakeroot
       apt-get install -qy --no-install-recommends wget
