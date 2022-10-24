@@ -6,7 +6,7 @@ variables:
     deb http://deb.debian.org/debian-security ${BUILD_DIST}-security main
 
 glrepo:
-  stage: build
+  stage: source
   image: ${BUILD_IMAGE}
 
   script:
@@ -16,5 +16,5 @@ glrepo:
       apt-get update -qy
       apt-get upgrade -qy -o DPkg::Options::=--force-unsafe-io fakeroot
       apt-get install -qy --no-install-recommends wget
-      wget -q ${GRADENLINUX_REPO_KEY_SOURCE} -O /etc/apt/trusted.gpg.d/${GARDENLINUX_REPO_KEY}
+      wget ${GRADENLINUX_REPO_KEY_SOURCE} -O /etc/apt/trusted.gpg.d/${GARDENLINUX_REPO_KEY}
     fi
