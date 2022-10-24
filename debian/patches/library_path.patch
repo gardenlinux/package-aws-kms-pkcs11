@@ -12,7 +12,7 @@ Subject: Adjust path to library dependenies
 +else ifeq ($(ARCH),arm64)
 +  GNU_ARCH := aarch64
 +else
-+  $(error Unknown architecture)
++  $(error Unknown architecture $(ARCH))
 +endif
 +
  # Try to find which subdir of the SDK has the libraries
