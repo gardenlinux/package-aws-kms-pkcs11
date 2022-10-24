@@ -2,12 +2,24 @@ Subject: Adjust path to library dependenies
 
 --- a/Makefile
 +++ b/Makefile
-@@ -12,7 +12,7 @@
+@@ -9,10 +9,19 @@
+   endif
+ endif
+ 
++ARCH := $(dpkg --print-architecture)
++ifeq ($(ARCH),amd64)
++  GNU_ARCH := x86_64
++else ifeq ($(ARCH),arm64)
++  GNU_ARCH := aarch64
++else
++  $(error Unknown architecture)
++endif
++
  # Try to find which subdir of the SDK has the libraries
  ifneq ($(AWS_SDK_PATH),)
    ifneq ($(wildcard $(AWS_SDK_PATH)/lib),)
 -    AWS_SDK_LIB_PATH := $(addsuffix /lib,$(AWS_SDK_PATH))
-+    AWS_SDK_LIB_PATH := $(addsuffix /lib/x86_64-linux-gnu,$(AWS_SDK_PATH))
++    AWS_SDK_LIB_PATH := $(addsuffix /lib/$(GNU_ARCH)-linux-gnu,$(AWS_SDK_PATH))
    else ifneq ($(wildcard $(AWS_SDK_PATH)/lib64),)
      AWS_SDK_LIB_PATH := $(addsuffix /lib64,$(AWS_SDK_PATH))
    else
