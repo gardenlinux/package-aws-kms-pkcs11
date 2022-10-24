@@ -1,7 +1,25 @@
 include:
+- local: .gitlab/ci/glrepo.yml
 - project: gardenlinux/gardenlinux-package-build
   file:
-  - pipeline/pipeline.yml
+#  - pipeline/pipeline.yml
+  - pipeline/variables.yml
+  - pipeline/workflow.yml
+  - pipeline/source.yml
+  - pipeline/build.yml
+  - pipeline/signed-source.yml
+  - pipeline/signed-build.yml
+  - pipeline/test.yml
+  - pipeline/deploy.yml
+
+stages:
+- source
+- glrepo
+- build
+- signed source
+- signed build
+- test
+- deploy
 
 variables:
   # Define the source of this package
@@ -10,4 +28,4 @@ variables:
   BUILD_SOURCES_LIST: |
     deb http://deb.debian.org/debian ${BUILD_DIST} main
     deb http://deb.debian.org/debian-security ${BUILD_DIST}-security main
-    deb http://repo.gardenlinux.io/gardenlinux today main
+    deb [signed-by=/etc/apt/trusted.gpg.d/gardenlinux.asc] http://repo.gardenlinux.io/gardenlinux today main

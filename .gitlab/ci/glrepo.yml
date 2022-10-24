@@ -1,0 +1,9 @@
+variables:
+  GARDENLINUX_REPO_KEY: gardenlinux.asc
+  GRADENLINUX_REPO_KEY_SOURCE: https://raw.githubusercontent.com/gardenlinux/gardenlinux/main/gardenlinux.asc
+
+glrepo:
+  stage: build
+
+  script:
+  - wget -q ${GRADENLINUX_REPO_KEY_SOURCE} -O /etc/apt/trusted.gpg.d/${GARDENLINUX_REPO_KEY}
