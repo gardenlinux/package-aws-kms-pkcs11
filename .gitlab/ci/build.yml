@@ -4,6 +4,11 @@ variables:
   BUILD_SOURCES_LIST: |
       deb http://deb.debian.org/debian ${BUILD_DIST} main
       deb http://deb.debian.org/debian-security ${BUILD_DIST}-security main
+  GARDENLINUX_REPO_KEY: gardenlinux.asc
+  GRADENLINUX_REPO_KEY_SOURCE: https://raw.githubusercontent.com/gardenlinux/gardenlinux/main/gardenlinux.asc
+  BUILD_SOURCES_START_LIST: |
+    deb http://deb.debian.org/debian ${BUILD_DIST} main
+    deb http://deb.debian.org/debian-security ${BUILD_DIST}-security main
 
 .build:
   stage: build
@@ -12,6 +17,11 @@ variables:
   before_script:
   - >
     if [[ $CI_DISPOSABLE_ENVIRONMENT ]]; then
+      echo -n "$BUILD_SOURCES_START_LIST" > /etc/apt/sources.list
+      apt-get update -qy
+      apt-get upgrade -qy -o DPkg::Options::=--force-unsafe-io fakeroot
+      apt-get install -qy --no-install-recommends ca-certificates wget
+      wget ${GRADENLINUX_REPO_KEY_SOURCE} -O /etc/apt/trusted.gpg.d/${GARDENLINUX_REPO_KEY}
       echo -n "$BUILD_SOURCES_LIST" > /etc/apt/sources.list
       if [[ $JOB_HOST_ARCH != all ]]; then
         dpkg --add-architecture $JOB_HOST_ARCH
