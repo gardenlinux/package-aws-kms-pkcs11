@@ -1,29 +1,9 @@
 include:
-- local: .gitlab/ci/build.yml
-- project: gardenlinux/gardenlinux-package-build
-  file:
-#  - pipeline/pipeline.yml
-  - pipeline/variables.yml
-  - pipeline/workflow.yml
-  - pipeline/source.yml
-  - pipeline/signed-source.yml
-  - pipeline/signed-build.yml
-  - pipeline/test.yml
-  - pipeline/deploy.yml
-
-stages:
-- source
-- build
-- signed source
-- signed build
-- test
-- deploy
+  ref: build-repo-gardenlinux
+  project: gardenlinux/gardenlinux-package-build
+  file: pipeline/pipeline-git.yml
 
 variables:
-  # Define the source of this package
-  SOURCE_NAME: 'aws-kms-pkcs11'
-  ORIG_TAR: 'aws-kms-pkcs11_0.0.9.orig.tar.gz'
-  BUILD_SOURCES_LIST: |
-    deb http://deb.debian.org/debian ${BUILD_DIST} main
-    deb http://deb.debian.org/debian-security ${BUILD_DIST}-security main
-    deb [signed-by=/etc/apt/trusted.gpg.d/gardenlinux.asc] http://repo.gardenlinux.io/gardenlinux today main
+  SOURCE_NAME: aws-kms-pkcs11
+  SOURCE_REPO: https://github.com/JackOfMostTrades/aws-kms-pkcs11.git
+  BUILD_USE_GARDENLINUX: 'true'

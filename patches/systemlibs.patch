@@ -1,0 +1,150 @@
+Subject: Build using libraries in system paths
+
+diff --git a/Makefile b/Makefile
+index a3cf56d..d011b49 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,25 +1,3 @@
+-# Try to locate the AWS SDK if not specified with AWS_SDK_PATH
+-ifeq ($(AWS_SDK_PATH),)
+-  ifneq ($(wildcard /usr/include/aws),)
+-    AWS_SDK_PATH := /usr
+-  else ifneq ($(wildcard /usr/local/include/aws),)
+-    AWS_SDK_PATH := /usr/local
+-  else
+-    $(error AWS SDK not found in common include path, please specify AWS_SDK_PATH)
+-  endif
+-endif
+-
+-# Try to find which subdir of the SDK has the libraries
+-ifneq ($(AWS_SDK_PATH),)
+-  ifneq ($(wildcard $(AWS_SDK_PATH)/lib),)
+-    AWS_SDK_LIB_PATH := $(addsuffix /lib,$(AWS_SDK_PATH))
+-  else ifneq ($(wildcard $(AWS_SDK_PATH)/lib64),)
+-    AWS_SDK_LIB_PATH := $(addsuffix /lib64,$(AWS_SDK_PATH))
+-  else
+-    $(error neither lib or lib64 found in AWS SDK)
+-  endif
+-endif
+-
+ # The SDK has two main sets of components, the C runtimes and the C++ runtimes,
+ # depending on how the SDK is built, they can be separately either static libs,
+ # dynamic libs, or both.
+@@ -30,41 +8,13 @@ endif
+ # Use these variables to override the mechanisms for those two  sets:
+ #
+ # AWS_SDK_STATIC = y     : Force use of static libraries for both C and C++
+-# AWS_SDK_STATIC = n     : Force use of dynamic libraries for both C and C++
+ # AWS_SDK_C_STATIC = y   : Force use of static libraries for C
+-# AWS_SDK_C_STATIC = n   : Force use of dynamic libraries for C
+ # AWS_SDK_CPP_STATIC = y : Force use of static libraries for C++
+-# AWS_SDK_CPP_STATIC = n : Force use of dynamic libraries for C++
+ 
+ ifdef AWS_SDK_STATIC
+   ifeq ($(AWS_SDK_STATIC),y)
+     AWS_SDK_C_STATIC := y
+     AWS_SDK_CPP_STATIC := y
+-  else ifeq ($(AWS_SDK_STATIC),n)
+-    AWS_SDK_C_STATIC := n
+-    AWS_SDK_CPP_STATIC := n
+-  else
+-    $(error Unrecognized value for AWS_SDK_STATIC, use y or n)
+-  endif
+-endif
+-
+-ifndef AWS_SDK_C_STATIC
+-  ifneq ($(wildcard ${AWS_SDK_LIB_PATH}/libaws-c-common.a),)
+-    AWS_SDK_C_STATIC := y
+-  else ifneq ($(wildcard ${AWS_SDK_LIB_PATH}/libaws-c-common.so),)
+-    AWS_SDK_C_STATIC := n
+-  else
+-      $(error Cannot find either static or dynamic SDK C libraries)
+-  endif
+-endif
+-
+-ifndef AWS_SDK_CPP_STATIC
+-  ifneq ($(wildcard ${AWS_SDK_LIB_PATH}/libaws-cpp-sdk-kms.a),)
+-      AWS_SDK_CPP_STATIC := y
+-  else ifneq ($(wildcard ${AWS_SDK_LIB_PATH}/libaws-cpp-sdk-core.so),)
+-      AWS_SDK_CPP_STATIC := n
+-  else
+-      $(error Cannot find either static or dynamic SDK C++ libraries)
+   endif
+ endif
+ 
+@@ -109,43 +59,27 @@ ifeq ($(JSON_C_INC),)
+ endif
+ 
+ # Build library link list
+-STATIC_LIBS :=
+-LIBS :=
++AWS_LIBS :=
++AWS_LIBS += -laws-cpp-sdk-core
++AWS_LIBS += -laws-cpp-sdk-kms
+ ifeq ($(AWS_SDK_CPP_STATIC),y)
+   $(info Using C++ SDK static libraries)
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-cpp-sdk-kms.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-cpp-sdk-core.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-crt-cpp.a
+-else ifeq ($(AWS_SDK_CPP_STATIC),n)
+-  $(info Using C++ SDK dynamic libraries)
+-  LIBS += $(AWS_SDK_LIB_PATH)/libaws-cpp-sdk-core.so
+-  LIBS += $(AWS_SDK_LIB_PATH)/libaws-cpp-sdk-kms.so
+-else
+-    $(error Unrecognized value for AWS_SDK_CPP_STATIC, use y or n)
++  AWS_LIBS += -laws-crt-cpp
+ endif
++AWS_LIBS += -laws-checksums
++AWS_LIBS += -laws-c-common
++AWS_LIBS += -laws-c-event-stream
+ ifeq ($(AWS_SDK_C_STATIC),y)
+   $(info Using C SDK static libraries)
+-  STATIC_LIBS += -Wl,--start-group
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-checksums.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-common.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-event-stream.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-auth.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-http.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-io.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-mqtt.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-cal.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-compression.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-s3.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-sdkutils.a
+-  STATIC_LIBS += $(AWS_SDK_LIB_PATH)/libs2n.a
+-  STATIC_LIBS += -Wl,--end-group
+-else ifeq ($(AWS_SDK_C_STATIC),n)
+-  $(info Using C SDK dynamic libraries)
+-  LIBS += $(AWS_SDK_LIB_PATH)/libaws-checksums.so
+-  LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-common.so
+-  LIBS += $(AWS_SDK_LIB_PATH)/libaws-c-event-stream.so
+-else
+-    $(error Unrecognized value for AWS_SDK_C_STATIC, use y or n)
++  AWS_LIBS += -laws-c-auth
++  AWS_LIBS += -laws-c-http
++  AWS_LIBS += -laws-c-io
++  AWS_LIBS += -laws-c-mqtt
++  AWS_LIBS += -laws-c-cal
++  AWS_LIBS += -laws-c-compression
++  AWS_LIBS += -laws-c-s3
++  AWS_LIBS += -laws-c-sdkutils
++  AWS_LIBS += -ls2n
+ endif
+ 
+ # Source files
+@@ -167,11 +101,11 @@ aws_kms_pkcs11_test: aws_kms_pkcs11_test.c aws_kms_pkcs11.so
+ 	gcc -g -Wall $(PKCS11_INC) aws_kms_pkcs11_test.c -o aws_kms_pkcs11_test -ldl
+ 
+ aws_kms_pkcs11.so: aws_kms_pkcs11.cpp unsupported.cpp aws_kms_slot.cpp debug.cpp attributes.cpp certificates.cpp
+-	g++ -shared -fPIC -Wall -I$(AWS_SDK_PATH)/include $(PKCS11_INC) $(JSON_C_INC) -fno-exceptions -std=c++17 $(SRC) \
+-	    -o aws_kms_pkcs11.so $(STATIC_LIBS) $(LIBS) -lcrypto -ljson-c -lcurl
++	g++ -shared -fPIC -Wall $(PKCS11_INC) $(JSON_C_INC) -fno-exceptions -std=c++17 $(SRC) \
++	    -o aws_kms_pkcs11.so -Wl,--no-undefined -Wl,--start-group $(AWS_LIBS) -Wl,--end-group -lcrypto -ljson-c -lcurl
+ 
+ install: aws_kms_pkcs11.so
+-	cp aws_kms_pkcs11.so $(PKCS11_MOD_PATH)/
++	install -D -t $(DESTDIR)$(PKCS11_MOD_PATH)/ aws_kms_pkcs11.so
+ 
+ uninstall:
+-	rm -f $(PKCS11_MOD_PATH)/aws_kms_pkcs11.so
++	rm -f $(DESTDIR)$(PKCS11_MOD_PATH)/aws_kms_pkcs11.so
