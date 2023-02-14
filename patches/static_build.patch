@@ -139,14 +139,14 @@
  aws_kms_pkcs11.so: aws_kms_pkcs11.cpp unsupported.cpp aws_kms_slot.cpp debug.cpp attributes.cpp certificates.cpp
 -	g++ -shared -fPIC -Wall -I$(AWS_SDK_PATH)/include $(PKCS11_INC) $(JSON_C_INC) -fno-exceptions -std=c++17 $(SRC) \
 -	    -o aws_kms_pkcs11.so $(STATIC_LIBS) $(LIBS) -lcrypto -ljson-c -lcurl
-+    g++ -shared -fPIC -Wall $(PKCS11_INC) $(JSON_C_INC) -fno-exceptions -std=c++17 $(SRC) \  
-+      -o aws_kms_pkcs11.so -Wl,--no-undefined -Wl,--start-group $(AWS_LIBS) -Wl,--end-group -lcrypto -ljson-c -lcurl
++	g++ -shared -fPIC -Wall $(PKCS11_INC) $(JSON_C_INC) -fno-exceptions -std=c++17 $(SRC) \  
++	    -o aws_kms_pkcs11.so -Wl,--no-undefined -Wl,--start-group $(AWS_LIBS) -Wl,--end-group -lcrypto -ljson-c -lcurl
  
  install: aws_kms_pkcs11.so
 -	cp aws_kms_pkcs11.so $(PKCS11_MOD_PATH)/
-+    install -D -t $(DESTDIR)$(PKCS11_MOD_PATH)/ aws_kms_pkcs11.so
++	install -D -t $(DESTDIR)$(PKCS11_MOD_PATH)/ aws_kms_pkcs11.so
  
  uninstall:
 -	rm -f $(PKCS11_MOD_PATH)/aws_kms_pkcs11.so
-+    install -D -t $(DESTDIR)$(PKCS11_MOD_PATH)/ aws_kms_pkcs11.so
++	install -D -t $(DESTDIR)$(PKCS11_MOD_PATH)/ aws_kms_pkcs11.so
 +
