@@ -7,7 +7,7 @@ source:
 	dh $@
 
 override_dh_auto_build:
-	dh_auto_build -- AWS_SDK_STATIC=y
+	dh_auto_build -- AWS_SDK_STATIC=n
 
 # Tests require AWS access
 override_dh_auto_test:
