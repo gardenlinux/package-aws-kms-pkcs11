@@ -1,1 +1,2 @@
-static_build.patch
+lib_dir.patch
+install.patch

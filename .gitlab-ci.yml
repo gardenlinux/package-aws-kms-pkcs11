@@ -1,8 +1,0 @@
-include:
-  project: gardenlinux/gardenlinux-package-build
-  file: pipeline/pipeline-git.yml
-
-variables:
-  SOURCE_NAME: aws-kms-pkcs11
-  SOURCE_REPO: https://github.com/JackOfMostTrades/aws-kms-pkcs11.git
-  BUILD_USE_GARDENLINUX_REPO: 'true'

@@ -1,0 +1,11 @@
+--- b/Makefile	2024-01-30 14:19:34.070251184 +0000
++++ c/Makefile	2024-01-30 14:20:34.138466227 +0000
+@@ -178,7 +178,7 @@
+ 	    -o aws_kms_pkcs11.so $(STATIC_LIBS) $(LIBS) -lcrypto -ljson-c -lcurl
+
+ install: aws_kms_pkcs11.so
+-	cp aws_kms_pkcs11.so $(PKCS11_MOD_PATH)/
++	install -D -t $(DESTDIR)$(PKCS11_MOD_PATH)/ aws_kms_pkcs11.so
+
+ uninstall:
+ 	rm -f $(PKCS11_MOD_PATH)/aws_kms_pkcs11.so
