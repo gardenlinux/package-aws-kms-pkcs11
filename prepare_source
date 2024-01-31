@@ -3,3 +3,4 @@ version=0.0.11
 git_src --branch "v$version" https://github.com/JackOfMostTrades/aws-kms-pkcs11.git
 import_src src
 apply_patches
+version_suffix=gardenlinux0
